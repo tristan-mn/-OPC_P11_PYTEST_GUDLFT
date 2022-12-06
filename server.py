@@ -30,8 +30,6 @@ def showSummary():
         club = [club for club in clubs if club['email'] == request.form['email']][0]
         return render_template('welcome.html', club=club, competitions=competitions)
     except IndexError:
-        flash('Email was not found. Please try again.')
-        print("#"*30)
         return render_template('index.html')
 
 
@@ -51,8 +49,13 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
+
+    if placesRequired < int(club['points']):
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+        club['points'] = int(club['points'])-placesRequired
+        flash('Great-booking complete!')
+    else:
+        flash("you don't have enough points")
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
