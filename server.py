@@ -57,6 +57,7 @@ def purchasePlaces():
             if placesRequired < int(club['points']):
                 if current_time < competition_time:
                     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+                    club['points'] = int(club['points'])-placesRequired
                     flash('Great-booking complete!')
                 else:
                     flash("ERROR : you cannot purchase places, it's a past competition")
