@@ -15,8 +15,8 @@ class TestBook():
 class TestPurchase():
     def test_purchases_successful(self, client):
         club = "Simply Lift"
-        competition = "Spring Festival"
-        placesRequired = "5"
+        competition = "Small Challenge"
+        placesRequired = "1"
         response = client.post('/purchasePlaces', data={"club": club, "competition": competition, "places": placesRequired})
         data = response.data.decode()
         assert response.status_code == 200
@@ -38,4 +38,12 @@ class TestPurchase():
         placesRequired = "55"
         response = client.post('/purchasePlaces', data={"club": club, "competition": competition, "places": placesRequired})
         assert response.status_code == 200
-        assert "value less or equal" in response.data.decode()
+        assert "value less or equal to 12" in response.data.decode()
+    
+    def test__purchase_places_past_competition(self, client):
+        club = "Simply Lift"
+        competition = "Spring Festival"
+        placesRequired = "1"
+        response = client.post('/purchasePlaces', data={'club': club, 'competition': competition, 'places': placesRequired})
+        assert response.status_code == 200
+        assert 'past competition' in response.data.decode()
