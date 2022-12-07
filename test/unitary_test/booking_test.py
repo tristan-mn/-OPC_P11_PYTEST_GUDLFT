@@ -2,6 +2,12 @@ from test.conftest import client
 from flask import request, flash
 import pytest
 
+
+def test_display_points(client):
+    response = client.get('/displaypoints')
+    assert response.status_code == 200
+
+
 @pytest.mark.usefixtures("client")
 class TestBook():
     def test_book_successful(self, client):
@@ -47,3 +53,11 @@ class TestPurchase():
         response = client.post('/purchasePlaces', data={'club': club, 'competition': competition, 'places': placesRequired})
         assert response.status_code == 200
         assert 'past competition' in response.data.decode()
+    
+    def test_purchase_negative_number(self, client):
+        club = "Iron Temple"
+        competition = "Spring Festival"
+        placesRequired = "-12"
+        response = client.post('/purchasePlaces', data={"club": club, "competition": competition, "places": placesRequired})
+        assert response.status_code == 200
+        assert "better than 0" in response.data.decode()
