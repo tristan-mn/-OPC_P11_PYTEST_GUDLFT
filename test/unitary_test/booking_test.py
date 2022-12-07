@@ -61,3 +61,11 @@ class TestPurchase():
         response = client.post('/purchasePlaces', data={"club": club, "competition": competition, "places": placesRequired})
         assert response.status_code == 200
         assert "better than 0" in response.data.decode()
+    
+    def test_purchase_not_enough_places(self, client):
+        club = "Simply Lift"
+        competition = "Small Challenge"
+        placesRequired = "7"
+        response = client.post('/purchasePlaces', data={"club": club, "competition": competition, "places": placesRequired})
+        assert response.status_code == 200
+        assert "enough places" in response.data.decode()
